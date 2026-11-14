@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bingo Hall Seating Chart</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --primary: #1e3a8a;
+      --primary-light: #dbeafe;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --table-wood: #e5e7eb;
+      --table-border: #4b5563;
+      --occupied: #dcfce7;
+      --occupied-border: #16a34a;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Top Control Bar */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .event-title-input {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.35);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 240px;
+    }
+
+    .event-title-input::placeholder {
+      color: rgba(255,255,255,0.75);
+    }
+
+    .toolbar {
+      background: var(--card);
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tool-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: var(--text);
+    }
+
+    button.secondary:hover {
+      background: #d1d5db;
+    }
+
+    button.danger {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    button.danger:hover {
+      background: #fecaca;
+    }
+
+    input[type="text"], select, input[type="number"] {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .search-box {
+      min-width: 230px;
+      border: 2px solid var(--primary);
+    }
+
+    .stats {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Room Floor Plan */
+    .stage-banner {
+      max-width: 600px;
+      margin: 20px auto 10px auto;
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    .floor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+      padding: 20px 24px 60px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Table Card */
+    .table-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .table-card.highlight {
+      border-color: var(--accent);
+      background: #fffbeb;
+      box-shadow: 0 0 0 4px var(--accent-light);
+    }
+
+    .table-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    .table-name-input {
+      font-weight: 700;
+      font-size: 1.05rem;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--primary);
+      width: 160px;
+      padding: 4px;
+    }
+
+    .table-name-input:hover, .table-name-input:focus {
+      border-color: var(--border);
+      background: #f9fafb;
+    }
+
+    .table-controls {
+      display: flex;
+      gap: 4px;
+    }
+
+    .icon-btn {
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      border-radius: 4px;
+    }
+
+    /* Visual Table Diagram */
+    .visual-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 6px 0;
+    }
+
+    /* Rectangular Table Layout */
+    .rect-seats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    .rect-table-surface {
+      width: 100%;
+      background: var(--table-wood);
+      border: 2px solid var(--table-border);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+      text-align: center;
+      font-weight: 700;
+      color: #374151;
+      letter-spacing: 0.5px;
+    }
+
+    /* Round Table Layout */
+    .round-layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .round-table-surface {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--table-wood);
+      border: 2px solid var(--table-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #374151;
+      margin: 10px 0;
+      padding: 8px;
+    }
+
+    /* Seat Pill */
+    .seat {
+      border: 1.5px dashed #9ca3af;
+      background: #f9fafb;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      min-height: 36px;
+      transition: all 0.12s;
+    }
+
+    .seat:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .seat.occupied {
+      border-style: solid;
+      border-color: var(--occupied-border);
+      background: var(--occupied);
+      font-weight: 600;
+      color: #14532d;
+    }
+
+    .seat.match {
+      background: var(--accent);
+      border-color: #b45309;
+      color: #000;
+      font-weight: 800;
+    }
+
+    .seat-num {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .seat.occupied .seat-num {
+      color: #15803d;
+    }
+
+    .seat-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-grow: 1;
+    }
+
+    /* Modal for Editing Seat */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      padding: 22px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 380px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .modal h3 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+
+    .modal input {
+      width: 100%;
+      margin: 10px 0 16px 0;
+      font-size: 1rem;
+      padding: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    /* Print Styles */
+    @media print {
+      header, .toolbar, .table-controls {
+        display: none !important;
+      }
+      body {
+        background: white;
+      }
+      .print-header {
+        display: block !important;
+        text-align: center;
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin: 10px 0;
+      }
+      .floor-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 10px;
+      }
+      .table-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1.5px solid #000;
+      }
+      .seat {
+        border: 1px solid #666;
+      }
+    }
+
+    .print-header {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>
+      🎱 Bingo Seating Chart
+      <input type="text" id="eventTitle" class="event-title-input" value="Monthly Bingo" placeholder="Event / Month Name" />
+    </h1>
+    <div class="tool-group">
+      <button class="secondary" onclick="exportData()">💾 Save Month File</button>
+      <button class="secondary" onclick="document.getElementById('importFile').click()">📂 Load Month File</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
+      <button onclick="window.print()">🖨️ Print Visual Chart</button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="tool-group">
+      <button onclick="addTable('rect')">+ Add Long Table</button>
+      <button onclick="addTable('round')">+ Add Round Table</button>
+      <button class="danger" onclick="clearAllNames()">Clear All Names</button>
+    </div>
+
+    <div class="tool-group">
+      <input type="text" id="searchInput" class="search-box" placeholder="🔍 Find guest name..." oninput="render()" />
+      <span class="stats" id="statsDisplay">0 / 0 Seats Reserved</span>
+    </div>
+  </div>
+
+  <div class="print-header" id="printTitle">Monthly Bingo — Reserved Seating</div>
+  <div class="stage-banner">Front of Hall / Bingo Caller Stage</div>
+
+  <main class="floor-grid" id="floorGrid"></main>
+
+  <!-- Seat Edit Modal -->
+  <div class="modal-backdrop" id="seatModal">
+    <div class="modal">
+      <h3 id="modalTitle">Assign Seat</h3>
+      <label for="guestNameInput" style="font-size:0.9rem; color:#4b5563;">Guest Name (leave blank to mark open):</label>
+      <input type="text" id="guestNameInput" placeholder="e.g., Jane Doe" onkeydown="handleModalKey(event)" />
+      <div class="modal-actions">
+        <button class="danger" onclick="clearCurrentSeat()">Remove</button>
+        <button class="secondary" onclick="closeModal()">Cancel</button>
+        <button onclick="saveSeat()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "bingo_seating_chart_v1";
+
+    // Default starter layout: 6 rectangular tables with 8 seats each
+    let state = {
+      title: "Monthly Bingo",
+      tables: [
+        createTableObj(1, "Table 1", "rect", 8),
+        createTableObj(2, "Table 2", "rect", 8),
+        createTableObj(3, "Table 3", "rect", 8),
+        createTableObj(4, "Table 4", "rect", 8),
+        createTableObj(5, "Table 5", "rect", 8),
+        createTableObj(6, "Table 6", "rect", 8)
+      ]
+    };
+
+    let activeEdit = { tableId: null, seatIndex: null };
+
+    function createTableObj(id, name, shape, seatCount) {
+      return {
+        id: id,
+        name: name,
+        shape: shape, // 'rect' or 'round'
+        seats: Array(seatCount).fill("")
+      };
+    }
+
+    function loadFromStorage() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          state = JSON.parse(saved);
+        } catch (e) {
+          console.error("Could not load saved seating data", e);
+        }
+      }
+      document.getElementById("eventTitle").value = state.title || "Monthly Bingo";
+    }
+
+    function saveToStorage() {
+      state.title = document.getElementById("eventTitle").value;
+      document.getElementById("printTitle").textContent = `${state.title} — Reserved Seating`;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    document.getElementById("eventTitle").addEventListener("input", saveToStorage);
+
+    function addTable(shape) {
+      const nextNum = state.tables.length + 1;
+      const defaultSeats = shape === "round" ? 6 : 8;
+      state.tables.push(createTableObj(Date.now(), `Table ${nextNum}`, shape, defaultSeats));
+      saveToStorage();
+      render();
+    }
+
+    function deleteTable(tableId) {
+      if (!confirm("Delete this entire table?")) return;
+      state.tables = state.tables.filter(t => t.id !== tableId);
+      saveToStorage();
+      render();
+    }
+
+    function changeSeatCount(tableId, delta) {
+      const table = state.tables.find(t => t.id === tableId);
+      if (!table) return;
+      if (delta > 0 && table.seats.length < 20) {
+        table.seats.push("");
+      } else if (delta < 0 && table.seats.length > 2) {
+        table.seats.pop();
+      }
+      saveToStorage();
+      render();
+    }
+
+    function toggleShape(tableId) {
+      const table = state.tables.find(t => t.id === tableId);
+      if (!table) return;
+      table.shape = table.shape === "rect" ? "round" : "rect";
+      saveToStorage();
+      render();
+    }
+
+    function renameTable(tableId, newName) {
+      const table = state.tables.find(t => t.id === tableId);
+      if (table) {
+        table.name = newName;
+        saveToStorage();
+      }
+    }
+
+    function clearAllNames() {
+      if (!confirm("Clear all guest names for a new month? (Your table layout will stay the same.)")) return;
+      state.tables.forEach(t => {
+        t.seats = t.seats.map(() => "");
+      });
+      saveToStorage();
+      render();
+    }
+
+    // Modal Functions
+    function openSeatModal(tableId, seatIndex) {
+      const table = state.tables.find(t => t.id === tableId);
+      if (!table) return;
+      activeEdit = { tableId, seatIndex };
+      document.getElementById("modalTitle").textContent = `${table.name} — Seat ${seatIndex + 1}`;
+      const input = document.getElementById("guestNameInput");
+      input.value = table.seats[seatIndex] || "";
+      document.getElementById("seatModal").classList.add("open");
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeModal() {
+      document.getElementById("seatModal").classList.remove("open");
+    }
+
+    function saveSeat() {
+      const table = state.tables.find(t => t.id === activeEdit.tableId);
+      if (table) {
+        table.seats[activeEdit.seatIndex] = document.getElementById("guestNameInput").value.trim();
+        saveToStorage();
+        render();
+      }
+      closeModal();
+    }
+
+    function clearCurrentSeat() {
+      document.getElementById("guestNameInput").value = "";
+      saveSeat();
+    }
+
+    function handleModalKey(e) {
+      if (e.key === "Enter") saveSeat();
+      if (e.key === "Escape") closeModal();
+    }
+
+    // Export / Import JSON files for monthly backups
+    function exportData() {
+      saveToStorage();
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const safeName = (state.title || "bingo-seating").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      a.href = url;
+      a.download = `${safeName}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && Array.isArray(parsed.tables)) {
+            state = parsed;
+            document.getElementById("eventTitle").value = state.title || "Monthly Bingo";
+            saveToStorage();
+            render();
+          } else {
+            alert("Invalid seating chart file.");
+          }
+        } catch (err) {
+          alert("Could not read file.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    // Render Visual Floor Plan
+    function render() {
+      const grid = document.getElementById("floorGrid");
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      grid.innerHTML = "";
+
+      let totalSeats = 0;
+      let reservedSeats = 0;
+
+      state.tables.forEach(table => {
+        totalSeats += table.seats.length;
+        let tableHasMatch = false;
+
+        table.seats.forEach(guest => {
+          if (guest.trim() !== "") reservedSeats++;
+          if (query && guest.toLowerCase().includes(query)) tableHasMatch = true;
+        });
+
+        const card = document.createElement("div");
+        card.className = "table-card" + (tableHasMatch ? " highlight" : "");
+
+        // Header
+        const header = document.createElement("div");
+        header.className = "table-header";
+        header.innerHTML = `
+          <input class="table-name-input" value="${escapeHtml(table.name)}" onchange="renameTable(${table.id}, this.value)" />
+          <div class="table-controls">
+            <button class="secondary icon-btn" title="Switch Round/Long" onclick="toggleShape(${table.id})">${table.shape === 'rect' ? '⭕ Round' : '▭ Long'}</button>
+            <button class="secondary icon-btn" title="Remove Seat" onclick="changeSeatCount(${table.id}, -1)">-Seat</button>
+            <button class="secondary icon-btn" title="Add Seat" onclick="changeSeatCount(${table.id}, 1)">+Seat</button>
+            <button class="danger icon-btn" title="Delete Table" onclick="deleteTable(${table.id})">✕</button>
+          </div>
+        `;
+        card.appendChild(header);
+
+        // Visual Table & Seats
+        const visual = document.createElement("div");
+        visual.className = "visual-wrapper";
+
+        const half = Math.ceil(table.seats.length / 2);
+        const topSeats = table.seats.slice(0, half);
+        const bottomSeats = table.seats.slice(half);
+
+        const topRow = document.createElement("div");
+        topRow.className = "rect-seats-row";
+        topSeats.forEach((guest, idx) => {
+          topRow.appendChild(createSeatElement(table.id, idx, guest, query));
+        });
+
+        const bottomRow = document.createElement("div");
+        bottomRow.className = "rect-seats-row";
+        bottomSeats.forEach((guest, idx) => {
+          bottomRow.appendChild(createSeatElement(table.id, idx + half, guest, query));
+        });
+
+        const surface = document.createElement("div");
+        surface.className = table.shape === "round" ? "round-table-surface" : "rect-table-surface";
+        surface.textContent = table.name;
+
+        visual.appendChild(topRow);
+        visual.appendChild(surface);
+        visual.appendChild(bottomRow);
+
+        card.appendChild(visual);
+        grid.appendChild(card);
+      });
+
+      document.getElementById("statsDisplay").textContent = `${reservedSeats} / ${totalSeats} Seats Reserved`;
+      document.getElementById("printTitle").textContent = `${state.title} — Reserved Seating`;
+    }
+
+    function createSeatElement(tableId, seatIndex, guest, query) {
+      const seat = document.createElement("div");
+      const isOccupied = guest.trim() !== "";
+      const isMatch = query && isOccupied && guest.toLowerCase().includes(query);
+
+      seat.className = "seat" + (isOccupied ? " occupied" : "") + (isMatch ? " match" : "");
+      seat.onclick = () => openSeatModal(tableId, seatIndex);
+
+      seat.innerHTML = `
+        <span class="seat-num">#${seatIndex + 1}</span>
+        <span class="seat-label">${isOccupied ? escapeHtml(guest) : "Open Seat"}</span>
+      `;
+      return seat;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+    }
+
+    loadFromStorage();
+    render();
+  </script>
+</body>
+</html>
