@@ -1,826 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bingo Hall Seating Chart</title>
-  <style>
-    :root {
-      --bg: #f4f6f9;
-      --card: #ffffff;
-      --primary: #1e3a8a;
-      --primary-light: #dbeafe;
-      --accent: #f59e0b;
-      --accent-light: #fef3c7;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #d1d5db;
-      --table-wood: #e5e7eb;
-      --table-border: #4b5563;
-      --occupied: #dcfce7;
-      --occupied-border: #16a34a;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo Designated Seats</title>
+<style>
+  :root {
+    --primary-blue: #1b365d;
+    --accent-gold: #f4b41a;
+    --walkway-bg: #e2e8f0;
+    --seat-bg: #dbeafe;
+    --seat-border: #2563eb;
+    --table-bg: #f8fafc;
+  }
 
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+  * {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
 
+  body {
+    background-color: #f1f5f9;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Control Bar - Hidden when printing */
+  .controls {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    max-width: 1000px;
+    width: 100%;
+  }
+
+  .controls span {
+    font-size: 14px;
+    color: #475569;
+    margin-right: auto;
+  }
+
+  button {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background-color: #2c5282;
+  }
+
+  button.secondary {
+    background-color: #64748b;
+  }
+
+  button.secondary:hover {
+    background-color: #475569;
+  }
+
+  button.danger {
+    background-color: #dc2626;
+  }
+
+  button.danger:hover {
+    background-color: #b91c1c;
+  }
+
+  /* Main Printable Chart */
+  .chart-container {
+    background: white;
+    width: 100%;
+    max-width: 1050px;
+    padding: 24px;
+    border: 4px solid var(--primary-blue);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .header {
+    text-align: center;
+    background: var(--primary-blue);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--accent-gold);
+  }
+
+  .header p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: bold;
+  }
+
+  /* Stage and Kitchen Row */
+  .landmarks {
+    display: grid;
+    grid-template-columns: 1fr 110px 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .landmark-box {
+    background: #fef3c7;
+    border: 3px dashed #d97706;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 18px;
+    color: #92400e;
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Room Layout Grid */
+  .room-grid {
+    display: grid;
+    grid-template-columns: 1fr 110px 1fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .side-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px 12px;
+  }
+
+  /* Center Walkway */
+  .walkway {
+    background: var(--walkway-bg);
+    border: 2px solid #94a3b8;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10px;
+    font-weight: 800;
+    color: #334155;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  .arrow {
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  /* Individual Table + Seats */
+  .table-unit {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .seats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+
+  .seat {
+    background: var(--seat-bg);
+    border: 1.5px solid var(--seat-border);
+    border-radius: 5px;
+    min-height: 30px;
+    padding: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1e3a8a;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+    cursor: text;
+    transition: background 0.15s;
+  }
+
+  .seat:hover, .table-center:hover {
+    background: #fef9c3;
+    outline: 2px solid #eab308;
+  }
+
+  .seat:empty::before {
+    content: "Seat";
+    color: #93c5fd;
+    font-weight: 400;
+    font-size: 10px;
+  }
+
+  .table-center {
+    background: var(--table-bg);
+    border: 2.5px solid var(--primary-blue);
+    border-radius: 6px;
+    padding: 8px 4px;
+    text-align: center;
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: text;
+  }
+
+  .table-num {
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+  }
+
+  .table-group {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 2px;
+  }
+
+  /* Print Formatting */
+  @media print {
     body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    /* Top Control Bar */
-    header {
-      background: var(--primary);
-      color: white;
-      padding: 16px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.35rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .event-title-input {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.35);
-      color: white;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      width: 240px;
-    }
-
-    .event-title-input::placeholder {
-      color: rgba(255,255,255,0.75);
-    }
-
-    .toolbar {
-      background: var(--card);
-      padding: 12px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .tool-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
-    button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    button:hover {
-      background: #1d4ed8;
-    }
-
-    button.secondary {
-      background: #e5e7eb;
-      color: var(--text);
-    }
-
-    button.secondary:hover {
-      background: #d1d5db;
-    }
-
-    button.danger {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    button.danger:hover {
-      background: #fecaca;
-    }
-
-    input[type="text"], select, input[type="number"] {
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .search-box {
-      min-width: 230px;
-      border: 2px solid var(--primary);
-    }
-
-    .stats {
-      font-size: 0.9rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    /* Hall Layout: Stage & Kitchen Banners */
-    .hall-header-row {
-      display: flex;
-      justify-content: space-around;
-      max-width: 1400px;
-      margin: 20px auto 0 auto;
-      padding: 0 24px;
-      gap: 20px;
-    }
-
-    .hall-badge {
-      background: #1f2937;
-      color: white;
-      text-align: center;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      flex: 1;
-    }
-
-    .hall-badge.kitchen {
-      background: #b45309;
-    }
-
-    /* Floor Plan Grid Layout mimicking the paper sign */
-    .floor-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 24px 60px 24px;
-      display: grid;
-      grid-template-columns: 1fr 120px 1fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    @media (max-width: 1024px) {
-      .floor-container {
-        grid-template-columns: 1fr;
-      }
-      .walkway-column {
-        display: none;
-      }
-    }
-
-    .table-section-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    @media (max-width: 1200px) {
-      .table-section-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    /* Center Walkway */
-    .walkway-column {
-      background: #e2e8f0;
-      border: 2px dashed #94a3b8;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 10px;
-      text-align: center;
-      min-height: 400px;
-      position: sticky;
-      top: 20px;
-    }
-
-    .walkway-text {
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      font-weight: 800;
-      color: #475569;
-      letter-spacing: 3px;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      margin: 20px 0;
-    }
-
-    .walkway-arrow {
-      font-size: 1.8rem;
-      color: #475569;
-      font-weight: bold;
-    }
-
-    /* Table Card */
-    .table-card {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: transform 0.15s, border-color 0.15s;
-    }
-
-    .table-card.highlight {
-      border-color: var(--accent);
-      background: #fffbeb;
-      box-shadow: 0 0 0 4px var(--accent-light);
-    }
-
-    .table-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 6px;
-    }
-
-    .table-name-input {
-      font-weight: 700;
-      font-size: 0.95rem;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--primary);
-      width: 110px;
-      padding: 2px;
-    }
-
-    .table-name-input:hover, .table-name-input:focus {
-      border-color: var(--border);
-      background: #f9fafb;
-    }
-
-    .table-controls {
-      display: flex;
-      gap: 3px;
-    }
-
-    .icon-btn {
-      padding: 3px 6px;
-      font-size: 0.72rem;
-      border-radius: 4px;
-    }
-
-    /* Visual Table Diagram */
-    .visual-wrapper {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 4px 0;
-    }
-
-    .rect-seats-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      width: 100%;
-    }
-
-    .rect-table-surface {
-      width: 100%;
-      background: var(--table-wood);
-      border: 2px solid var(--table-border);
-      border-radius: 6px;
-      padding: 8px;
-      margin: 8px 0;
-      text-align: center;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #374151;
-    }
-
-    .round-table-surface {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: var(--table-wood);
-      border: 2px solid var(--table-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #374151;
-      margin: 8px 0;
-      padding: 6px;
-    }
-
-    /* Seat Pill */
-    .seat {
-      border: 1.5px dashed #9ca3af;
-      background: #f9fafb;
-      border-radius: 6px;
-      padding: 6px 8px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 4px;
-      min-height: 32px;
-      transition: all 0.12s;
-    }
-
-    .seat:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .seat.occupied {
-      border-style: solid;
-      border-color: var(--occupied-border);
-      background: var(--occupied);
-      font-weight: 600;
-      color: #14532d;
-    }
-
-    .seat.match {
-      background: var(--accent);
-      border-color: #b45309;
-      color: #000;
-      font-weight: 800;
-    }
-
-    .seat-num {
-      font-size: 0.68rem;
-      color: var(--muted);
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .seat.occupied .seat-num {
-      color: #15803d;
-    }
-
-    .seat-label {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex-grow: 1;
-    }
-
-    /* Modal for Editing Seat */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal {
       background: white;
-      padding: 22px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 380px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      padding: 0;
     }
-
-    .modal h3 {
-      margin-top: 0;
-      color: var(--primary);
+    .controls {
+      display: none !important;
     }
-
-    .modal input {
-      width: 100%;
-      margin: 10px 0 16px 0;
-      font-size: 1rem;
-      padding: 10px;
+    .chart-container {
+      box-shadow: none;
+      border: 3px solid var(--primary-blue);
+      max-width: 100%;
+      padding: 15px;
     }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
+    .seat:empty::before {
+      content: "";
     }
-
-    /* Print Styles */
-    @media print {
-      header, .toolbar, .table-controls {
-        display: none !important;
-      }
-      body {
-        background: white;
-      }
-      .print-header {
-        display: block !important;
-        text-align: center;
-        font-size: 1.5rem;
-        font-weight: 800;
-        margin: 10px 0;
-      }
-      .floor-container {
-        grid-template-columns: 1fr 80px 1fr;
-        padding: 5px;
-        gap: 10px;
-      }
-      .table-card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1.5px solid #000;
-      }
-      .seat {
-        border: 1px solid #666;
-      }
+    @page {
+      size: landscape;
+      margin: 0.4in;
     }
-
-    .print-header {
-      display: none;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>
-      🎱 Bingo Seating Chart
-      <input type="text" id="eventTitle" class="event-title-input" value="Monthly Bingo" placeholder="Event / Month Name" />
-    </h1>
-    <div class="tool-group">
-      <button class="secondary" onclick="exportData()">💾 Save Month File</button>
-      <button class="secondary" onclick="document.getElementById('importFile').click()">📂 Load Month File</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importFile(event)" />
-      <button onclick="window.print()">🖨️ Print Visual Chart</button>
-    </div>
-  </header>
-
-  <div class="toolbar">
-    <div class="tool-group">
-      <button onclick="addTable('left')">+ Add Left Table</button>
-      <button onclick="addTable('right')">+ Add Right Table</button>
-      <button class="danger" onclick="clearAllNames()">Clear All Names</button>
-    </div>
-
-    <div class="tool-group">
-      <input type="text" id="searchInput" class="search-box" placeholder="🔍 Find guest name..." oninput="render()" />
-      <span class="stats" id="statsDisplay">0 / 0 Seats Reserved</span>
-    </div>
+  <!-- Toolbar for Non-Programmers -->
+  <div class="controls">
+    <span>✏️ <strong>Click any box or seat</strong> to type a name. Changes save automatically!</span>
+    <button onclick="window.print()">🖨️ Print Chart</button>
+    <button class="secondary" onclick="exportData()">💾 Save Backup</button>
+    <button class="secondary" onclick="document.getElementById('fileInput').click()">📂 Load Backup</button>
+    <button class="danger" onclick="resetChart()">🔄 Reset Default</button>
+    <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importData(event)">
   </div>
 
-  <div class="print-header" id="printTitle">Monthly Bingo — Reserved Seating</div>
-
-  <!-- Hall orientation banners -->
-  <div class="hall-header-row">
-    <div class="hall-badge">Stage / Front (Amy Houser Side)</div>
-    <div style="width: 120px; display:none;"></div>
-    <div class="hall-badge kitchen">Kitchen (Sheri & Bobby Side)</div>
-  </div>
-
-  <div class="floor-container">
-    <!-- Left Section (Tables 1-9) -->
-    <div class="table-section-grid" id="leftGrid"></div>
-
-    <!-- Center Walkway -->
-    <div class="walkway-column">
-      <div class="walkway-arrow">⬆️</div>
-      <div class="walkway-text">Walk Way</div>
-      <div class="walkway-arrow">⬇️</div>
+  <!-- Printable Seating Chart -->
+  <div class="chart-container">
+    <div class="header">
+      <h1>BINGO</h1>
+      <p>DESIGNATED SEATS</p>
     </div>
 
-    <!-- Right Section (Tables 10-18) -->
-    <div class="table-section-grid" id="rightGrid"></div>
-  </div>
+    <!-- Top Landmarks: Stage near Amy Houser (Left), Kitchen near Bobby (Right) -->
+    <div class="landmarks">
+      <div class="landmark-box" contenteditable="true" data-id="landmark-left">🎤 STAGE</div>
+      <div></div>
+      <div class="landmark-box" contenteditable="true" data-id="landmark-right">🍽️ KITCHEN</div>
+    </div>
 
-  <!-- Seat Edit Modal -->
-  <div class="modal-backdrop" id="seatModal">
-    <div class="modal">
-      <h3 id="modalTitle">Assign Seat</h3>
-      <label for="guestNameInput" style="font-size:0.9rem; color:#4b5563;">Guest Name (leave blank to mark open):</label>
-      <input type="text" id="guestNameInput" placeholder="e.g., Jane Doe" onkeydown="handleModalKey(event)" />
-      <div class="modal-actions">
-        <button class="danger" onclick="clearCurrentSeat()">Remove</button>
-        <button class="secondary" onclick="closeModal()">Cancel</button>
-        <button onclick="saveSeat()">Save</button>
+    <div class="room-grid">
+      <!-- LEFT SIDE TABLES (Flipped so 7, 8, 9 are at the top by the Stage) -->
+      <div class="side-section" id="left-tables"></div>
+
+      <!-- CENTER WALKWAY -->
+      <div class="walkway">
+        <div class="arrow">↑</div>
+        <div>WALK<br>WAY</div>
+        <div class="arrow">↓</div>
       </div>
+
+      <!-- RIGHT SIDE TABLES (Flipped so 18, 17, 16 are at the top by the Kitchen) -->
+      <div class="side-section" id="right-tables"></div>
     </div>
   </div>
 
-  <script>
-    const STORAGE_KEY = "bingo_seating_chart_v2";
+<script>
+  // =========================================================================
+  // EASY DEFAULT CONFIGURATION (If someone wants to edit defaults in code)
+  // =========================================================================
+  const defaultTables = {
+    left: [
+      { num: "Table 7", group: "Amy Houser" },
+      { num: "Table 8", group: "Bond" },
+      { num: "Table 9", group: "Knode" },
+      { num: "Table 4", group: "Debbie" },
+      { num: "Table 5", group: "" },
+      { num: "Table 6", group: "Wanda Reeder" },
+      { num: "Table 1", group: "Rachel Myers" },
+      { num: "Table 2", group: "Michael" },
+      { num: "Table 3", group: "Nalley" }
+    ],
+    right: [
+      { num: "Table 18", group: "Bobby" },
+      { num: "Table 17", group: "" },
+      { num: "Table 16", group: "" },
+      { num: "Table 15", group: "Sheri" },
+      { num: "Table 14", group: "" },
+      { num: "Table 13", group: "" },
+      { num: "Table 12", group: "Jamison" },
+      { num: "Table 11", group: "Jamison" },
+      { num: "Table 10", group: "Ladygo" }
+    ]
+  };
 
-    // Initial state matching the 18 tables from the reference photo
-    let state = {
-      title: "Monthly Bingo",
-      leftTables: [
-        { id: 1, name: "Table 1", shape: "rect", seats: ["Rachel Myers", "", "", "", "", "", "", ""] },
-        { id: 2, name: "Table 2", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 3, name: "Table 3", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 4, name: "Table 4", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 5, name: "Table 5", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 6, name: "Table 6", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 7, name: "Table 7", shape: "rect", seats: ["Amy Houser", "", "", "", "", "", "", ""] },
-        { id: 8, name: "Table 8", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 9, name: "Table 9", shape: "rect", seats: ["", "", "", "", "", "", "", ""] }
-      ],
-      rightTables: [
-        { id: 10, name: "Table 10", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 11, name: "Table 11", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 12, name: "Table 12", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 13, name: "Table 13", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 14, name: "Table 14", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 15, name: "Table 15", shape: "rect", seats: ["Sheri", "", "", "", "", "", "", ""] },
-        { id: 16, name: "Table 16", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 17, name: "Table 17", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
-        { id: 18, name: "Table 18", shape: "rect", seats: ["Bobby", "", "", "", "", "", "", ""] }
-      ]
-    };
+  // Build a single table with 3 top seats and 3 bottom seats
+  function createTableHTML(table, side, index) {
+    const baseId = `${side}-${index}`;
+    return `
+      <div class="table-unit">
+        <div class="seats-row">
+          <div class="seat" contenteditable="true" data-id="${baseId}-s1"></div>
+          <div class="seat" contenteditable="true" data-id="${baseId}-s2"></div>
+          <div class="seat" contenteditable="true" data-id="${baseId}-s3"></div>
+        </div>
+        <div class="table-center">
+          <div class="table-num" contenteditable="true" data-id="${baseId}-num">${table.num}</div>
+          <div class="table-group" contenteditable="true" data-id="${baseId}-group">${table.group}</div>
+        </div>
+        <div class="seats-row">
+          <div class="seat" contenteditable="true" data-id="${baseId}-s4"></div>
+          <div class="seat" contenteditable="true" data-id="${baseId}-s5"></div>
+          <div class="seat" contenteditable="true" data-id="${baseId}-s6"></div>
+        </div>
+      </div>
+    `;
+  }
 
-    let activeEdit = { side: null, tableId: null, seatIndex: null };
+  // Render the room
+  function initChart() {
+    const leftContainer = document.getElementById('left-tables');
+    const rightContainer = document.getElementById('right-tables');
 
-    function loadFromStorage() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          state = JSON.parse(saved);
-        } catch (e) {
-          console.error("Could not load saved seating data", e);
-        }
-      }
-      document.getElementById("eventTitle").value = state.title || "Monthly Bingo";
-    }
-
-    function saveToStorage() {
-      state.title = document.getElementById("eventTitle").value;
-      document.getElementById("printTitle").textContent = `${state.title} — Reserved Seating`;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    document.getElementById("eventTitle").addEventListener("input", saveToStorage);
-
-    function addTable(side) {
-      const targetList = side === 'left' ? state.leftTables : state.rightTables;
-      const nextNum = state.leftTables.length + state.rightTables.length + 1;
-      targetList.push({
-        id: Date.now(),
-        name: `Table ${nextNum}`,
-        shape: "rect",
-        seats: ["", "", "", "", "", "", "", ""]
-      });
-      saveToStorage();
-      render();
-    }
-
-    function deleteTable(side, tableId) {
-      if (!confirm("Delete this table?")) return;
-      if (side === 'left') {
-        state.leftTables = state.leftTables.filter(t => t.id !== tableId);
-      } else {
-        state.rightTables = state.rightTables.filter(t => t.id !== tableId);
-      }
-      saveToStorage();
-      render();
-    }
-
-    function changeSeatCount(side, tableId, delta) {
-      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
-      if (!table) return;
-      if (delta > 0 && table.seats.length < 20) {
-        table.seats.push("");
-      } else if (delta < 0 && table.seats.length > 2) {
-        table.seats.pop();
-      }
-      saveToStorage();
-      render();
-    }
-
-    function toggleShape(side, tableId) {
-      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
-      if (!table) return;
-      table.shape = table.shape === "rect" ? "round" : "rect";
-      saveToStorage();
-      render();
-    }
-
-    function renameTable(side, tableId, newName) {
-      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
-      if (table) {
-        table.name = newName;
-        saveToStorage();
-      }
-    }
-
-    function clearAllNames() {
-      if (!confirm("Clear all guest names? (Table layout will be kept.)")) return;
-      [...state.leftTables, ...state.rightTables].forEach(t => {
-        t.seats = t.seats.map(() => "");
-      });
-      saveToStorage();
-      render();
-    }
-
-    // Modal Functions
-    function openSeatModal(side, tableId, seatIndex) {
-      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
-      if (!table) return;
-      activeEdit = { side, tableId, seatIndex };
-      document.getElementById("modalTitle").textContent = `${table.name} — Seat ${seatIndex + 1}`;
-      const input = document.getElementById("guestNameInput");
-      input.value = table.seats[seatIndex] || "";
-      document.getElementById("seatModal").classList.add("open");
-      setTimeout(() => input.focus(), 50);
-    }
-
-    function closeModal() {
-      document.getElementById("seatModal").classList.remove("open");
-    }
-
-    function saveSeat() {
-      const table = (activeEdit.side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === activeEdit.tableId);
-      if (table) {
-        table.seats[activeEdit.seatIndex] = document.getElementById("guestNameInput").value.trim();
-        saveToStorage();
-        render();
-      }
-      closeModal();
-    }
-
-    function clearCurrentSeat() {
-      document.getElementById("guestNameInput").value = "";
-      saveSeat();
-    }
-
-    function handleModalKey(e) {
-      if (e.key === "Enter") saveSeat();
-      if (e.key === "Escape") closeModal();
-    }
-
-    // Export / Import JSON files
-    function exportData() {
-      saveToStorage();
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      const safeName = (state.title || "bingo-seating").toLowerCase().replace(/[^a-z0-9]+/g, "-");
-      a.href = url;
-      a.download = `${safeName}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importFile(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          if (parsed && (Array.isArray(parsed.leftTables) || Array.isArray(parsed.tables))) {
-            // Support both old and new format during import
-            if (Array.isArray(parsed.tables)) {
-              const half = Math.ceil(parsed.tables.length / 2);
-              state.leftTables = parsed.tables.slice(0, half);
-              state.rightTables = parsed.tables.slice(half);
-            } else {
-              state = parsed;
-            }
-            document.getElementById("eventTitle").value = state.title || "Monthly Bingo";
-            saveToStorage();
-            render();
-          } else {
-            alert("Invalid seating chart file.");
-          }
-        } catch (err) {
-          alert("Could not read file.");
-        }
-      };
-      reader.readAsText(file);
-      event.target.value = "";
-    }
-
-    // Render Room Floor Plan
-    function render() {
-      const leftGrid = document.getElementById("leftGrid");
-      const rightGrid = document.getElementById("rightGrid");
-      const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      
-      leftGrid.innerHTML = "";
-      rightGrid.innerHTML = "";
-
-      let totalSeats = 0;
-      let reservedSeats = 0;
-
-      function renderSide(tables, container, sideName) {
-        tables.forEach(table => {
-          totalSeats += table.seats.length;
-          let tableHasMatch = false;
-
-          table.seats.forEach(guest => {
-            if (guest.trim() !== "") reservedSeats++;
-            if (query && guest.toLowerCase().includes(query)) tableHasMatch = true;
-          });
-
-          const card = document.createElement("div");
-          card.className = "table-card" + (tableHasMatch ? " highlight" : "");
-
-          const header = document.createElement("div");
-          header.className = "table-header";
-          header.innerHTML = `
-            <input class="table-name-input" value="${escapeHtml(table.name)}" onchange="renameTable('${sideName}', ${table.id}, this.value)" />
-            <div class="table-controls">
-              <button class="secondary icon-btn" title="Round/Long" onclick="toggleShape('${sideName}', ${table.id})">${table.shape === 'rect' ? '⭕' : '▭'}</button>
-              <button class="secondary icon-btn" title="Remove Seat" onclick="changeSeatCount('${sideName}', ${table.id}, -1)">-</button>
-              <button class="secondary icon-btn" title="Add Seat" onclick="changeSeatCount('${sideName}', ${table.id}, 1)">+</button>
-              <button class="danger icon-btn" title="Delete" onclick="deleteTable('${sideName}', ${table.id})">✕</button>
-            </div>
-          `;
-          card.appendChild(header);
-
-          const visual = document.createElement("div");
-          visual.className = "visual-wrapper";
-
-          const half = Math.ceil(table.seats.length / 2);
-          const topSeats = table.seats.slice(0, half);
-          const bottomSeats = table.seats.slice(half);
-
-          const topRow = document.createElement("div");
-          topRow.className = "rect-seats-row";
-          topSeats.forEach((guest, idx) => {
-            topRow.appendChild(createSeatElement(sideName, table.id, idx, guest, query));
-          });
-
-          const bottomRow = document.createElement("div");
-          bottomRow.className = "rect-seats-row";
-          bottomSeats.forEach((guest, idx) => {
-            bottomRow.appendChild(createSeatElement(sideName, table.id, idx + half, guest, query));
-          });
-
-          const surface = document.createElement("div");
-          surface.className = table.shape === "round" ? "round-table-surface" : "rect-table-surface";
-          surface.textContent = table.name;
-
-          visual.appendChild(topRow);
-          visual.appendChild(surface);
-          visual.appendChild(bottomRow);
-
-          card.appendChild(visual);
-          container.appendChild(card);
-        });
-      }
-
-      renderSide(state.leftTables, leftGrid, 'left');
-      renderSide(state.rightTables, rightGrid, 'right');
-
-      document.getElementById("statsDisplay").textContent = `${reservedSeats} / ${totalSeats} Seats Reserved`;
-      document.getElementById("printTitle").textContent = `${state.title} — Reserved Seating`;
-    }
-
-    function createSeatElement(side, tableId, seatIndex, guest, query) {
-      const seat = document.createElement("div");
-      const isOccupied = guest.trim() !== "";
-      const isMatch = query && isOccupied && guest.toLowerCase().includes(query);
-
-      seat.className = "seat" + (isOccupied ? " occupied" : "") + (isMatch ? " match" : "");
-      seat.onclick = () => openSeatModal(side, tableId, seatIndex);
-
-      seat.innerHTML = `
-        <span class="seat-num">#${seatIndex + 1}</span>
-        <span class="seat-label">${isOccupied ? escapeHtml(guest) : "Open Seat"}</span>
-      `;
-      return seat;
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;");
-    }
+    leftContainer.innerHTML = defaultTables.left.map((t, i) => createTableHTML(t, 'left', i)).join('');
+    rightContainer.innerHTML = defaultTables.right.map((t, i) => createTableHTML(t, 'right', i)).join('');
 
     loadFromStorage();
-    render();
-  </script>
+
+    // Auto-save whenever anyone types in any box
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      el.addEventListener('input', saveToStorage);
+    });
+  }
+
+  // Save all text to browser memory
+  function saveToStorage() {
+    const data = {};
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      data[el.dataset.id] = el.innerText.trim();
+    });
+    localStorage.setItem('bingoSeatingChart', JSON.stringify(data));
+  }
+
+  // Load saved names from browser memory
+  function loadFromStorage() {
+    const saved = localStorage.getItem('bingoSeatingChart');
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      if (data[el.dataset.id] !== undefined) {
+        el.innerText = data[el.dataset.id];
+      }
+    });
+  }
+
+  // Download a JSON backup file to send to other volunteers
+  function exportData() {
+    saveToStorage();
+    const data = localStorage.getItem('bingoSeatingChart');
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bingo-seating-backup.json';
+    a.click();
+  }
+
+  // Load a JSON backup file
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      localStorage.setItem('bingoSeatingChart', e.target.result);
+      loadFromStorage();
+      alert('Seating chart loaded!');
+    };
+    reader.readAsText(file);
+  }
+
+  // Clear edits and restore original layout
+  function resetChart() {
+    if (confirm('Are you sure you want to clear all typed names and reset to the original chart?')) {
+      localStorage.removeItem('bingoSeatingChart');
+      initChart();
+    }
+  }
+
+  initChart();
+</script>
 </body>
 </html>
