@@ -138,28 +138,96 @@
       font-weight: 600;
     }
 
-    /* Room Floor Plan */
-    .stage-banner {
-      max-width: 600px;
-      margin: 20px auto 10px auto;
+    /* Hall Layout: Stage & Kitchen Banners */
+    .hall-header-row {
+      display: flex;
+      justify-content: space-around;
+      max-width: 1400px;
+      margin: 20px auto 0 auto;
+      padding: 0 24px;
+      gap: 20px;
+    }
+
+    .hall-badge {
       background: #1f2937;
       color: white;
       text-align: center;
-      padding: 10px;
+      padding: 10px 20px;
       border-radius: 8px;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
       font-size: 0.9rem;
+      flex: 1;
     }
 
-    .floor-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 24px;
-      padding: 20px 24px 60px 24px;
+    .hall-badge.kitchen {
+      background: #b45309;
+    }
+
+    /* Floor Plan Grid Layout mimicking the paper sign */
+    .floor-container {
       max-width: 1400px;
       margin: 0 auto;
+      padding: 20px 24px 60px 24px;
+      display: grid;
+      grid-template-columns: 1fr 120px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .floor-container {
+        grid-template-columns: 1fr;
+      }
+      .walkway-column {
+        display: none;
+      }
+    }
+
+    .table-section-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1200px) {
+      .table-section-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Center Walkway */
+    .walkway-column {
+      background: #e2e8f0;
+      border: 2px dashed #94a3b8;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 10px;
+      text-align: center;
+      min-height: 400px;
+      position: sticky;
+      top: 20px;
+    }
+
+    .walkway-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-weight: 800;
+      color: #475569;
+      letter-spacing: 3px;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      margin: 20px 0;
+    }
+
+    .walkway-arrow {
+      font-size: 1.8rem;
+      color: #475569;
+      font-weight: bold;
     }
 
     /* Table Card */
@@ -167,7 +235,7 @@
       background: var(--card);
       border: 2px solid var(--border);
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
@@ -186,19 +254,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       border-bottom: 1px solid #eee;
-      padding-bottom: 8px;
+      padding-bottom: 6px;
     }
 
     .table-name-input {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       border: 1px solid transparent;
       background: transparent;
       color: var(--primary);
-      width: 160px;
-      padding: 4px;
+      width: 110px;
+      padding: 2px;
     }
 
     .table-name-input:hover, .table-name-input:focus {
@@ -208,12 +276,12 @@
 
     .table-controls {
       display: flex;
-      gap: 4px;
+      gap: 3px;
     }
 
     .icon-btn {
-      padding: 4px 8px;
-      font-size: 0.78rem;
+      padding: 3px 6px;
+      font-size: 0.72rem;
       border-radius: 4px;
     }
 
@@ -223,14 +291,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 6px 0;
+      margin: 4px 0;
     }
 
-    /* Rectangular Table Layout */
     .rect-seats-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      gap: 6px;
       width: 100%;
     }
 
@@ -238,26 +305,18 @@
       width: 100%;
       background: var(--table-wood);
       border: 2px solid var(--table-border);
-      border-radius: 8px;
-      padding: 12px;
-      margin: 10px 0;
+      border-radius: 6px;
+      padding: 8px;
+      margin: 8px 0;
       text-align: center;
       font-weight: 700;
+      font-size: 0.85rem;
       color: #374151;
-      letter-spacing: 0.5px;
-    }
-
-    /* Round Table Layout */
-    .round-layout {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
     }
 
     .round-table-surface {
-      width: 110px;
-      height: 110px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       background: var(--table-wood);
       border: 2px solid var(--table-border);
@@ -266,10 +325,10 @@
       justify-content: center;
       text-align: center;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #374151;
-      margin: 10px 0;
-      padding: 8px;
+      margin: 8px 0;
+      padding: 6px;
     }
 
     /* Seat Pill */
@@ -277,14 +336,14 @@
       border: 1.5px dashed #9ca3af;
       background: #f9fafb;
       border-radius: 6px;
-      padding: 7px 10px;
-      font-size: 0.85rem;
+      padding: 6px 8px;
+      font-size: 0.8rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 6px;
-      min-height: 36px;
+      gap: 4px;
+      min-height: 32px;
       transition: all 0.12s;
     }
 
@@ -309,7 +368,7 @@
     }
 
     .seat-num {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--muted);
       font-weight: 700;
       flex-shrink: 0;
@@ -379,14 +438,14 @@
       .print-header {
         display: block !important;
         text-align: center;
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         font-weight: 800;
         margin: 10px 0;
       }
-      .floor-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        padding: 10px;
+      .floor-container {
+        grid-template-columns: 1fr 80px 1fr;
+        padding: 5px;
+        gap: 10px;
       }
       .table-card {
         break-inside: avoid;
@@ -413,15 +472,15 @@
     <div class="tool-group">
       <button class="secondary" onclick="exportData()">💾 Save Month File</button>
       <button class="secondary" onclick="document.getElementById('importFile').click()">📂 Load Month File</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importFile(event)" />
       <button onclick="window.print()">🖨️ Print Visual Chart</button>
     </div>
   </header>
 
   <div class="toolbar">
     <div class="tool-group">
-      <button onclick="addTable('rect')">+ Add Long Table</button>
-      <button onclick="addTable('round')">+ Add Round Table</button>
+      <button onclick="addTable('left')">+ Add Left Table</button>
+      <button onclick="addTable('right')">+ Add Right Table</button>
       <button class="danger" onclick="clearAllNames()">Clear All Names</button>
     </div>
 
@@ -432,9 +491,28 @@
   </div>
 
   <div class="print-header" id="printTitle">Monthly Bingo — Reserved Seating</div>
-  <div class="stage-banner">Front of Hall / Bingo Caller Stage</div>
 
-  <main class="floor-grid" id="floorGrid"></main>
+  <!-- Hall orientation banners -->
+  <div class="hall-header-row">
+    <div class="hall-badge">Stage / Front (Amy Houser Side)</div>
+    <div style="width: 120px; display:none;"></div>
+    <div class="hall-badge kitchen">Kitchen (Sheri & Bobby Side)</div>
+  </div>
+
+  <div class="floor-container">
+    <!-- Left Section (Tables 1-9) -->
+    <div class="table-section-grid" id="leftGrid"></div>
+
+    <!-- Center Walkway -->
+    <div class="walkway-column">
+      <div class="walkway-arrow">⬆️</div>
+      <div class="walkway-text">Walk Way</div>
+      <div class="walkway-arrow">⬇️</div>
+    </div>
+
+    <!-- Right Section (Tables 10-18) -->
+    <div class="table-section-grid" id="rightGrid"></div>
+  </div>
 
   <!-- Seat Edit Modal -->
   <div class="modal-backdrop" id="seatModal">
@@ -451,31 +529,36 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "bingo_seating_chart_v1";
+    const STORAGE_KEY = "bingo_seating_chart_v2";
 
-    // Default starter layout: 6 rectangular tables with 8 seats each
+    // Initial state matching the 18 tables from the reference photo
     let state = {
       title: "Monthly Bingo",
-      tables: [
-        createTableObj(1, "Table 1", "rect", 8),
-        createTableObj(2, "Table 2", "rect", 8),
-        createTableObj(3, "Table 3", "rect", 8),
-        createTableObj(4, "Table 4", "rect", 8),
-        createTableObj(5, "Table 5", "rect", 8),
-        createTableObj(6, "Table 6", "rect", 8)
+      leftTables: [
+        { id: 1, name: "Table 1", shape: "rect", seats: ["Rachel Myers", "", "", "", "", "", "", ""] },
+        { id: 2, name: "Table 2", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 3, name: "Table 3", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 4, name: "Table 4", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 5, name: "Table 5", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 6, name: "Table 6", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 7, name: "Table 7", shape: "rect", seats: ["Amy Houser", "", "", "", "", "", "", ""] },
+        { id: 8, name: "Table 8", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 9, name: "Table 9", shape: "rect", seats: ["", "", "", "", "", "", "", ""] }
+      ],
+      rightTables: [
+        { id: 10, name: "Table 10", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 11, name: "Table 11", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 12, name: "Table 12", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 13, name: "Table 13", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 14, name: "Table 14", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 15, name: "Table 15", shape: "rect", seats: ["Sheri", "", "", "", "", "", "", ""] },
+        { id: 16, name: "Table 16", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 17, name: "Table 17", shape: "rect", seats: ["", "", "", "", "", "", "", ""] },
+        { id: 18, name: "Table 18", shape: "rect", seats: ["Bobby", "", "", "", "", "", "", ""] }
       ]
     };
 
-    let activeEdit = { tableId: null, seatIndex: null };
-
-    function createTableObj(id, name, shape, seatCount) {
-      return {
-        id: id,
-        name: name,
-        shape: shape, // 'rect' or 'round'
-        seats: Array(seatCount).fill("")
-      };
-    }
+    let activeEdit = { side: null, tableId: null, seatIndex: null };
 
     function loadFromStorage() {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -497,23 +580,32 @@
 
     document.getElementById("eventTitle").addEventListener("input", saveToStorage);
 
-    function addTable(shape) {
-      const nextNum = state.tables.length + 1;
-      const defaultSeats = shape === "round" ? 6 : 8;
-      state.tables.push(createTableObj(Date.now(), `Table ${nextNum}`, shape, defaultSeats));
+    function addTable(side) {
+      const targetList = side === 'left' ? state.leftTables : state.rightTables;
+      const nextNum = state.leftTables.length + state.rightTables.length + 1;
+      targetList.push({
+        id: Date.now(),
+        name: `Table ${nextNum}`,
+        shape: "rect",
+        seats: ["", "", "", "", "", "", "", ""]
+      });
       saveToStorage();
       render();
     }
 
-    function deleteTable(tableId) {
-      if (!confirm("Delete this entire table?")) return;
-      state.tables = state.tables.filter(t => t.id !== tableId);
+    function deleteTable(side, tableId) {
+      if (!confirm("Delete this table?")) return;
+      if (side === 'left') {
+        state.leftTables = state.leftTables.filter(t => t.id !== tableId);
+      } else {
+        state.rightTables = state.rightTables.filter(t => t.id !== tableId);
+      }
       saveToStorage();
       render();
     }
 
-    function changeSeatCount(tableId, delta) {
-      const table = state.tables.find(t => t.id === tableId);
+    function changeSeatCount(side, tableId, delta) {
+      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
       if (!table) return;
       if (delta > 0 && table.seats.length < 20) {
         table.seats.push("");
@@ -524,16 +616,16 @@
       render();
     }
 
-    function toggleShape(tableId) {
-      const table = state.tables.find(t => t.id === tableId);
+    function toggleShape(side, tableId) {
+      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
       if (!table) return;
       table.shape = table.shape === "rect" ? "round" : "rect";
       saveToStorage();
       render();
     }
 
-    function renameTable(tableId, newName) {
-      const table = state.tables.find(t => t.id === tableId);
+    function renameTable(side, tableId, newName) {
+      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
       if (table) {
         table.name = newName;
         saveToStorage();
@@ -541,8 +633,8 @@
     }
 
     function clearAllNames() {
-      if (!confirm("Clear all guest names for a new month? (Your table layout will stay the same.)")) return;
-      state.tables.forEach(t => {
+      if (!confirm("Clear all guest names? (Table layout will be kept.)")) return;
+      [...state.leftTables, ...state.rightTables].forEach(t => {
         t.seats = t.seats.map(() => "");
       });
       saveToStorage();
@@ -550,10 +642,10 @@
     }
 
     // Modal Functions
-    function openSeatModal(tableId, seatIndex) {
-      const table = state.tables.find(t => t.id === tableId);
+    function openSeatModal(side, tableId, seatIndex) {
+      const table = (side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === tableId);
       if (!table) return;
-      activeEdit = { tableId, seatIndex };
+      activeEdit = { side, tableId, seatIndex };
       document.getElementById("modalTitle").textContent = `${table.name} — Seat ${seatIndex + 1}`;
       const input = document.getElementById("guestNameInput");
       input.value = table.seats[seatIndex] || "";
@@ -566,7 +658,7 @@
     }
 
     function saveSeat() {
-      const table = state.tables.find(t => t.id === activeEdit.tableId);
+      const table = (activeEdit.side === 'left' ? state.leftTables : state.rightTables).find(t => t.id === activeEdit.tableId);
       if (table) {
         table.seats[activeEdit.seatIndex] = document.getElementById("guestNameInput").value.trim();
         saveToStorage();
@@ -585,7 +677,7 @@
       if (e.key === "Escape") closeModal();
     }
 
-    // Export / Import JSON files for monthly backups
+    // Export / Import JSON files
     function exportData() {
       saveToStorage();
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
@@ -598,15 +690,22 @@
       URL.revokeObjectURL(url);
     }
 
-    function importData(event) {
+    function importFile(event) {
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const parsed = JSON.parse(e.target.result);
-          if (parsed && Array.isArray(parsed.tables)) {
-            state = parsed;
+          if (parsed && (Array.isArray(parsed.leftTables) || Array.isArray(parsed.tables))) {
+            // Support both old and new format during import
+            if (Array.isArray(parsed.tables)) {
+              const half = Math.ceil(parsed.tables.length / 2);
+              state.leftTables = parsed.tables.slice(0, half);
+              state.rightTables = parsed.tables.slice(half);
+            } else {
+              state = parsed;
+            }
             document.getElementById("eventTitle").value = state.title || "Monthly Bingo";
             saveToStorage();
             render();
@@ -621,84 +720,90 @@
       event.target.value = "";
     }
 
-    // Render Visual Floor Plan
+    // Render Room Floor Plan
     function render() {
-      const grid = document.getElementById("floorGrid");
+      const leftGrid = document.getElementById("leftGrid");
+      const rightGrid = document.getElementById("rightGrid");
       const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      grid.innerHTML = "";
+      
+      leftGrid.innerHTML = "";
+      rightGrid.innerHTML = "";
 
       let totalSeats = 0;
       let reservedSeats = 0;
 
-      state.tables.forEach(table => {
-        totalSeats += table.seats.length;
-        let tableHasMatch = false;
+      function renderSide(tables, container, sideName) {
+        tables.forEach(table => {
+          totalSeats += table.seats.length;
+          let tableHasMatch = false;
 
-        table.seats.forEach(guest => {
-          if (guest.trim() !== "") reservedSeats++;
-          if (query && guest.toLowerCase().includes(query)) tableHasMatch = true;
+          table.seats.forEach(guest => {
+            if (guest.trim() !== "") reservedSeats++;
+            if (query && guest.toLowerCase().includes(query)) tableHasMatch = true;
+          });
+
+          const card = document.createElement("div");
+          card.className = "table-card" + (tableHasMatch ? " highlight" : "");
+
+          const header = document.createElement("div");
+          header.className = "table-header";
+          header.innerHTML = `
+            <input class="table-name-input" value="${escapeHtml(table.name)}" onchange="renameTable('${sideName}', ${table.id}, this.value)" />
+            <div class="table-controls">
+              <button class="secondary icon-btn" title="Round/Long" onclick="toggleShape('${sideName}', ${table.id})">${table.shape === 'rect' ? '⭕' : '▭'}</button>
+              <button class="secondary icon-btn" title="Remove Seat" onclick="changeSeatCount('${sideName}', ${table.id}, -1)">-</button>
+              <button class="secondary icon-btn" title="Add Seat" onclick="changeSeatCount('${sideName}', ${table.id}, 1)">+</button>
+              <button class="danger icon-btn" title="Delete" onclick="deleteTable('${sideName}', ${table.id})">✕</button>
+            </div>
+          `;
+          card.appendChild(header);
+
+          const visual = document.createElement("div");
+          visual.className = "visual-wrapper";
+
+          const half = Math.ceil(table.seats.length / 2);
+          const topSeats = table.seats.slice(0, half);
+          const bottomSeats = table.seats.slice(half);
+
+          const topRow = document.createElement("div");
+          topRow.className = "rect-seats-row";
+          topSeats.forEach((guest, idx) => {
+            topRow.appendChild(createSeatElement(sideName, table.id, idx, guest, query));
+          });
+
+          const bottomRow = document.createElement("div");
+          bottomRow.className = "rect-seats-row";
+          bottomSeats.forEach((guest, idx) => {
+            bottomRow.appendChild(createSeatElement(sideName, table.id, idx + half, guest, query));
+          });
+
+          const surface = document.createElement("div");
+          surface.className = table.shape === "round" ? "round-table-surface" : "rect-table-surface";
+          surface.textContent = table.name;
+
+          visual.appendChild(topRow);
+          visual.appendChild(surface);
+          visual.appendChild(bottomRow);
+
+          card.appendChild(visual);
+          container.appendChild(card);
         });
+      }
 
-        const card = document.createElement("div");
-        card.className = "table-card" + (tableHasMatch ? " highlight" : "");
-
-        // Header
-        const header = document.createElement("div");
-        header.className = "table-header";
-        header.innerHTML = `
-          <input class="table-name-input" value="${escapeHtml(table.name)}" onchange="renameTable(${table.id}, this.value)" />
-          <div class="table-controls">
-            <button class="secondary icon-btn" title="Switch Round/Long" onclick="toggleShape(${table.id})">${table.shape === 'rect' ? '⭕ Round' : '▭ Long'}</button>
-            <button class="secondary icon-btn" title="Remove Seat" onclick="changeSeatCount(${table.id}, -1)">-Seat</button>
-            <button class="secondary icon-btn" title="Add Seat" onclick="changeSeatCount(${table.id}, 1)">+Seat</button>
-            <button class="danger icon-btn" title="Delete Table" onclick="deleteTable(${table.id})">✕</button>
-          </div>
-        `;
-        card.appendChild(header);
-
-        // Visual Table & Seats
-        const visual = document.createElement("div");
-        visual.className = "visual-wrapper";
-
-        const half = Math.ceil(table.seats.length / 2);
-        const topSeats = table.seats.slice(0, half);
-        const bottomSeats = table.seats.slice(half);
-
-        const topRow = document.createElement("div");
-        topRow.className = "rect-seats-row";
-        topSeats.forEach((guest, idx) => {
-          topRow.appendChild(createSeatElement(table.id, idx, guest, query));
-        });
-
-        const bottomRow = document.createElement("div");
-        bottomRow.className = "rect-seats-row";
-        bottomSeats.forEach((guest, idx) => {
-          bottomRow.appendChild(createSeatElement(table.id, idx + half, guest, query));
-        });
-
-        const surface = document.createElement("div");
-        surface.className = table.shape === "round" ? "round-table-surface" : "rect-table-surface";
-        surface.textContent = table.name;
-
-        visual.appendChild(topRow);
-        visual.appendChild(surface);
-        visual.appendChild(bottomRow);
-
-        card.appendChild(visual);
-        grid.appendChild(card);
-      });
+      renderSide(state.leftTables, leftGrid, 'left');
+      renderSide(state.rightTables, rightGrid, 'right');
 
       document.getElementById("statsDisplay").textContent = `${reservedSeats} / ${totalSeats} Seats Reserved`;
       document.getElementById("printTitle").textContent = `${state.title} — Reserved Seating`;
     }
 
-    function createSeatElement(tableId, seatIndex, guest, query) {
+    function createSeatElement(side, tableId, seatIndex, guest, query) {
       const seat = document.createElement("div");
       const isOccupied = guest.trim() !== "";
       const isMatch = query && isOccupied && guest.toLowerCase().includes(query);
 
       seat.className = "seat" + (isOccupied ? " occupied" : "") + (isMatch ? " match" : "");
-      seat.onclick = () => openSeatModal(tableId, seatIndex);
+      seat.onclick = () => openSeatModal(side, tableId, seatIndex);
 
       seat.innerHTML = `
         <span class="seat-num">#${seatIndex + 1}</span>
