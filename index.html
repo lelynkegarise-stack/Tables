@@ -9,20 +9,20 @@
     --primary-blue: #1b365d;
     --accent-gold: #f4b41a;
     --walkway-bg: #e2e8f0;
-    --seat-bg: #dbeafe;
+    --seat-bg: #eff6ff;
     --seat-border: #2563eb;
     --table-bg: #f8fafc;
   }
 
   * {
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 
   body {
     background-color: #f1f5f9;
     margin: 0;
-    padding: 20px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,30 +31,32 @@
   /* Control Bar - Hidden when printing */
   .controls {
     background: white;
-    padding: 12px 20px;
+    padding: 12px 16px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    max-width: 1000px;
+    max-width: 1200px;
     width: 100%;
   }
 
   .controls span {
     font-size: 14px;
-    color: #475569;
-    margin-right: auto;
+    color: #334155;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
   }
 
   button {
     background-color: var(--primary-blue);
     color: white;
     border: none;
-    padding: 8px 14px;
+    padding: 10px 14px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
@@ -82,75 +84,83 @@
     background-color: #b91c1c;
   }
 
+  /* Horizontal scroll wrapper for small phone screens */
+  .scroll-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
   /* Main Printable Chart */
   .chart-container {
     background: white;
-    width: 100%;
-    max-width: 1050px;
-    padding: 24px;
+    min-width: 960px;
+    padding: 20px;
     border: 4px solid var(--primary-blue);
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   }
 
   .header {
     text-align: center;
     background: var(--primary-blue);
     color: white;
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
   .header h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 26px;
     letter-spacing: 2px;
     color: var(--accent-gold);
   }
 
   .header p {
-    margin: 4px 0 0;
-    font-size: 14px;
+    margin: 2px 0 0;
+    font-size: 13px;
     letter-spacing: 1px;
     font-weight: bold;
   }
 
-  /* Stage and Kitchen Row */
-  .landmarks {
+  /* Room Layout with Side Stage & Side Kitchen */
+  .room-layout {
     display: grid;
-    grid-template-columns: 1fr 110px 1fr;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-
-  .landmark-box {
-    background: #fef3c7;
-    border: 3px dashed #d97706;
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-    font-weight: 800;
-    font-size: 18px;
-    color: #92400e;
-    letter-spacing: 1.5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Room Layout Grid */
-  .room-grid {
-    display: grid;
-    grid-template-columns: 1fr 110px 1fr;
-    gap: 16px;
+    grid-template-columns: 54px 1fr 76px 1fr 54px;
+    gap: 12px;
     align-items: stretch;
   }
 
-  .side-section {
+  /* Vertical Stage & Kitchen Banners */
+  .side-landmark {
+    background: #fef3c7;
+    border: 3px dashed #d97706;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: 800;
+    font-size: 18px;
+    color: #92400e;
+    letter-spacing: 3px;
+    padding: 10px 4px;
+    text-align: center;
+    cursor: text;
+  }
+
+  .side-landmark.kitchen {
+    transform: none;
+  }
+
+  .tables-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px 12px;
+    gap: 16px 10px;
   }
 
   /* Center Walkway */
@@ -162,24 +172,24 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 10px;
+    padding: 35px 6px;
     font-weight: 800;
     color: #334155;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     letter-spacing: 1px;
   }
 
   .arrow {
-    font-size: 32px;
+    font-size: 28px;
     line-height: 1;
   }
 
-  /* Individual Table + Seats */
+  /* Individual Table + Bigger Seats */
   .table-unit {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
   }
 
   .seats-row {
@@ -191,58 +201,62 @@
   .seat {
     background: var(--seat-bg);
     border: 1.5px solid var(--seat-border);
-    border-radius: 5px;
-    min-height: 30px;
-    padding: 3px;
-    font-size: 11px;
+    border-radius: 6px;
+    min-height: 46px;
+    padding: 4px 3px;
+    font-size: 13px;
     font-weight: 600;
     color: #1e3a8a;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1.15;
     word-break: break-word;
     cursor: text;
     transition: background 0.15s;
   }
 
-  .seat:hover, .table-center:hover {
+  .seat:hover, .seat:focus {
     background: #fef9c3;
     outline: 2px solid #eab308;
   }
 
   .seat:empty::before {
-    content: "Seat";
+    content: "Name";
     color: #93c5fd;
     font-weight: 400;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .table-center {
     background: var(--table-bg);
     border: 2.5px solid var(--primary-blue);
     border-radius: 6px;
-    padding: 8px 4px;
+    padding: 6px 4px;
     text-align: center;
-    min-height: 54px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    cursor: text;
-  }
-
-  .table-num {
-    font-size: 11px;
-    font-weight: 800;
-    color: #64748b;
-    text-transform: uppercase;
-  }
-
-  .table-group {
     font-size: 14px;
-    font-weight: 700;
-    color: #0f172a;
-    margin-top: 2px;
+    font-weight: 800;
+    color: var(--primary-blue);
+    letter-spacing: 0.5px;
+  }
+
+  /* Mobile Phone Adjustments */
+  @media (max-width: 768px) {
+    body {
+      padding: 8px;
+    }
+    .controls span {
+      font-size: 13px;
+    }
+    button {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+    .seat {
+      min-height: 52px;
+      font-size: 14px;
+    }
   }
 
   /* Print Formatting */
@@ -254,95 +268,86 @@
     .controls {
       display: none !important;
     }
-    .chart-container {
+    .scroll-wrapper {
+      overflow: visible;
       box-shadow: none;
+    }
+    .chart-container {
       border: 3px solid var(--primary-blue);
-      max-width: 100%;
-      padding: 15px;
+      min-width: 100%;
+      padding: 12px;
     }
     .seat:empty::before {
       content: "";
     }
     @page {
       size: landscape;
-      margin: 0.4in;
+      margin: 0.35in;
     }
   }
 </style>
 </head>
 <body>
 
-  <!-- Toolbar for Non-Programmers -->
+  <!-- Toolbar -->
   <div class="controls">
-    <span>✏️ <strong>Click any box or seat</strong> to type a name. Changes save automatically!</span>
+    <span>✏️ <strong>Tap any seat</strong> to type a person's name. Swipe sideways on phones to view the whole room!</span>
     <button onclick="window.print()">🖨️ Print Chart</button>
     <button class="secondary" onclick="exportData()">💾 Save Backup</button>
     <button class="secondary" onclick="document.getElementById('fileInput').click()">📂 Load Backup</button>
-    <button class="danger" onclick="resetChart()">🔄 Reset Default</button>
+    <button class="danger" onclick="resetChart()">🔄 Clear All Names</button>
     <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importData(event)">
   </div>
 
-  <!-- Printable Seating Chart -->
-  <div class="chart-container">
-    <div class="header">
-      <h1>BINGO</h1>
-      <p>DESIGNATED SEATS</p>
-    </div>
-
-    <!-- Top Landmarks: Stage near Amy Houser (Left), Kitchen near Bobby (Right) -->
-    <div class="landmarks">
-      <div class="landmark-box" contenteditable="true" data-id="landmark-left">🎤 STAGE</div>
-      <div></div>
-      <div class="landmark-box" contenteditable="true" data-id="landmark-right">🍽️ KITCHEN</div>
-    </div>
-
-    <div class="room-grid">
-      <!-- LEFT SIDE TABLES (Flipped so 7, 8, 9 are at the top by the Stage) -->
-      <div class="side-section" id="left-tables"></div>
-
-      <!-- CENTER WALKWAY -->
-      <div class="walkway">
-        <div class="arrow">↑</div>
-        <div>WALK<br>WAY</div>
-        <div class="arrow">↓</div>
+  <!-- Scrollable Container for Phones -->
+  <div class="scroll-wrapper">
+    <div class="chart-container">
+      <div class="header">
+        <h1>BINGO</h1>
+        <p>DESIGNATED SEATS</p>
       </div>
 
-      <!-- RIGHT SIDE TABLES (Flipped so 18, 17, 16 are at the top by the Kitchen) -->
-      <div class="side-section" id="right-tables"></div>
+      <div class="room-layout">
+        <!-- LEFT WALL: STAGE (Next to Tables 7, 4, 1) -->
+        <div class="side-landmark" contenteditable="true" data-id="landmark-stage">🎤 STAGE</div>
+
+        <!-- LEFT TABLES -->
+        <div class="tables-grid" id="left-tables"></div>
+
+        <!-- CENTER WALKWAY -->
+        <div class="walkway">
+          <div class="arrow">↑</div>
+          <div>WALK<br>WAY</div>
+          <div class="arrow">↓</div>
+        </div>
+
+        <!-- RIGHT TABLES -->
+        <div class="tables-grid" id="right-tables"></div>
+
+        <!-- RIGHT WALL: KITCHEN (Next to Tables 18, 15, 12) -->
+        <div class="side-landmark kitchen" contenteditable="true" data-id="landmark-kitchen">🍽️ KITCHEN</div>
+      </div>
     </div>
   </div>
 
 <script>
-  // =========================================================================
-  // EASY DEFAULT CONFIGURATION (If someone wants to edit defaults in code)
-  // =========================================================================
-  const defaultTables = {
+  // Table layout matching the exact room orientation:
+  // Left wall (Stage): 7, 4, 1 on the outside edge
+  // Right wall (Kitchen): 18, 15, 12 on the outside edge
+  const tableNumbers = {
     left: [
-      { num: "Table 7", group: "Amy Houser" },
-      { num: "Table 8", group: "Bond" },
-      { num: "Table 9", group: "Knode" },
-      { num: "Table 4", group: "Debbie" },
-      { num: "Table 5", group: "" },
-      { num: "Table 6", group: "Wanda Reeder" },
-      { num: "Table 1", group: "Rachel Myers" },
-      { num: "Table 2", group: "Michael" },
-      { num: "Table 3", group: "Nalley" }
+      "Table 7", "Table 8", "Table 9",
+      "Table 4", "Table 5", "Table 6",
+      "Table 1", "Table 2", "Table 3"
     ],
     right: [
-      { num: "Table 18", group: "Bobby" },
-      { num: "Table 17", group: "" },
-      { num: "Table 16", group: "" },
-      { num: "Table 15", group: "Sheri" },
-      { num: "Table 14", group: "" },
-      { num: "Table 13", group: "" },
-      { num: "Table 12", group: "Jamison" },
-      { num: "Table 11", group: "Jamison" },
-      { num: "Table 10", group: "Ladygo" }
+      "Table 16", "Table 17", "Table 18",
+      "Table 13", "Table 14", "Table 15",
+      "Table 10", "Table 11", "Table 12"
     ]
   };
 
-  // Build a single table with 3 top seats and 3 bottom seats
-  function createTableHTML(table, side, index) {
+  function createTableHTML(tableLabel, side, index) {
     const baseId = `${side}-${index}`;
     return `
       <div class="table-unit">
@@ -351,10 +356,7 @@
           <div class="seat" contenteditable="true" data-id="${baseId}-s2"></div>
           <div class="seat" contenteditable="true" data-id="${baseId}-s3"></div>
         </div>
-        <div class="table-center">
-          <div class="table-num" contenteditable="true" data-id="${baseId}-num">${table.num}</div>
-          <div class="table-group" contenteditable="true" data-id="${baseId}-group">${table.group}</div>
-        </div>
+        <div class="table-center">${tableLabel}</div>
         <div class="seats-row">
           <div class="seat" contenteditable="true" data-id="${baseId}-s4"></div>
           <div class="seat" contenteditable="true" data-id="${baseId}-s5"></div>
@@ -364,34 +366,30 @@
     `;
   }
 
-  // Render the room
   function initChart() {
-    const leftContainer = document.getElementById('left-tables');
-    const rightContainer = document.getElementById('right-tables');
+    document.getElementById('left-tables').innerHTML =
+      tableNumbers.left.map((label, i) => createTableHTML(label, 'left', i)).join('');
 
-    leftContainer.innerHTML = defaultTables.left.map((t, i) => createTableHTML(t, 'left', i)).join('');
-    rightContainer.innerHTML = defaultTables.right.map((t, i) => createTableHTML(t, 'right', i)).join('');
+    document.getElementById('right-tables').innerHTML =
+      tableNumbers.right.map((label, i) => createTableHTML(label, 'right', i)).join('');
 
     loadFromStorage();
 
-    // Auto-save whenever anyone types in any box
     document.querySelectorAll('[contenteditable="true"]').forEach(el => {
       el.addEventListener('input', saveToStorage);
     });
   }
 
-  // Save all text to browser memory
   function saveToStorage() {
     const data = {};
     document.querySelectorAll('[contenteditable="true"]').forEach(el => {
       data[el.dataset.id] = el.innerText.trim();
     });
-    localStorage.setItem('bingoSeatingChart', JSON.stringify(data));
+    localStorage.setItem('bingoSeatsOnlyV2', JSON.stringify(data));
   }
 
-  // Load saved names from browser memory
   function loadFromStorage() {
-    const saved = localStorage.getItem('bingoSeatingChart');
+    const saved = localStorage.getItem('bingoSeatsOnlyV2');
     if (!saved) return;
     const data = JSON.parse(saved);
     document.querySelectorAll('[contenteditable="true"]').forEach(el => {
@@ -401,10 +399,9 @@
     });
   }
 
-  // Download a JSON backup file to send to other volunteers
   function exportData() {
     saveToStorage();
-    const data = localStorage.getItem('bingoSeatingChart');
+    const data = localStorage.getItem('bingoSeatsOnlyV2') || '{}';
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -413,23 +410,21 @@
     a.click();
   }
 
-  // Load a JSON backup file
   function importData(event) {
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(e) {
-      localStorage.setItem('bingoSeatingChart', e.target.result);
+      localStorage.setItem('bingoSeatsOnlyV2', e.target.result);
       loadFromStorage();
       alert('Seating chart loaded!');
     };
     reader.readAsText(file);
   }
 
-  // Clear edits and restore original layout
   function resetChart() {
-    if (confirm('Are you sure you want to clear all typed names and reset to the original chart?')) {
-      localStorage.removeItem('bingoSeatingChart');
+    if (confirm('Clear all names from every seat?')) {
+      localStorage.removeItem('bingoSeatsOnlyV2');
       initChart();
     }
   }
